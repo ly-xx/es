@@ -1,0 +1,35 @@
+
+curl -XPUT http://192.168.241.129:9200/type_news_v1/ -d '
+{
+"settings": {
+    "number_of_shards" :  1,
+    "number_of_replicas" : 1
+  },
+  "mappings": {
+    "type_news": {
+      "properties": {
+        "id":{
+          "type": "long"
+        },
+        "title":{
+          "type": "string",
+          "analyzer": "ik_max_word"
+        },
+        "content":{
+          "type": "string",
+          "analyzer": "ik_max_word"
+        },
+        "reply":{
+          "type": "long"
+          }
+      }
+    }
+  }
+}'
+
+curl -XPUT http://192.168.241.129:9200/type_news_v1/_alias/type_news
+
+curl -XGET http://192.168.241.129:9200/type_news/_search?pretty
+
+curl -XPOST http://192.168.241.129:9200/type_news/_search -d '
+{'query': { 'term': {'title': '日常'} } }'

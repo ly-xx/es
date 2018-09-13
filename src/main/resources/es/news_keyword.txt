@@ -1,0 +1,38 @@
+
+curl -XPUT http://192.168.241.129:9200/news_keyword_v1/ -d '
+{
+"settings": {
+    "number_of_shards" :  1,
+    "number_of_replicas" : 1
+  },
+  "mappings": {
+    "news_keyword": {
+      "properties": {
+        "id":{
+          "type": "long"
+        },
+        "title":{
+          "type": "string",
+          "analyzer": "ik_max_word",
+          "fields": {
+              "keyword":{
+                "type": "string",
+                "index": "not_analyzed"
+              }
+            }
+        },
+        "content":{
+          "type": "string",
+          "analyzer": "ik_max_word"
+        },
+        "reply":{
+          "type": "long"
+          }
+      }
+    }
+  }
+}'
+
+curl -XPUT http://192.168.241.129:9200/news_keyword_v1/_alias/news_keyword
+
+curl -XGET http://192.168.241.129:9200/news_keyword/_search?pretty
