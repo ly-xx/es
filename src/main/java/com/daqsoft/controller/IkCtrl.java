@@ -59,7 +59,7 @@ public class IkCtrl {
             IndexResponse response = client.prepareIndex(TYPE, TYPE)
                     .setSource(value)
                     .setId(String.valueOf(news.getId()))
-                    .execute().actionGet();
+                    .get();
             return ResponseBuilder.custom().success().data(response.isCreated()).build();
         } catch (Exception e) {
             e.printStackTrace();
@@ -87,7 +87,7 @@ public class IkCtrl {
             IndexResponse response = client.prepareIndex(TYPE, TYPE)
                     .setSource(builder)
                     .setId(String.valueOf(news.getId()))
-                    .execute().actionGet();
+                    .get();
             return ResponseBuilder.custom().success().data(response.isCreated()).build();
         } catch (Exception e) {
             e.printStackTrace();
@@ -113,7 +113,7 @@ public class IkCtrl {
             IndexResponse response = client.prepareIndex(TYPE, TYPE)
                     .setSource(objMap)
                     .setId(String.valueOf(news.getId()))
-                    .execute().actionGet();
+                    .get();
             return ResponseBuilder.custom().success().data(response.isCreated()).build();
         } catch (Exception e) {
             e.printStackTrace();
@@ -134,11 +134,11 @@ public class IkCtrl {
         SearchResponse response = client.prepareSearch(TYPE)
                 .setTypes(TYPE)
                 .setExplain(true)
+                // 设置搜索类型
                 .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
                 .setQuery(QueryBuilders.termQuery("title", term))
                 .setFrom(0).setSize(10)
-                .execute()
-                .actionGet();
+                .get();
         SearchHit[] searchHits = response.getHits().getHits();
         List<Map> list = new ArrayList<>();
         for (int i = 0; i < searchHits.length; i++) {
@@ -159,7 +159,7 @@ public class IkCtrl {
     public BaseResponse getById(String id, HttpServletRequest request) {
         TransportClient client = TransportClientUtil.getClient();
         GetRequestBuilder requestBuilder = client.prepareGet(TYPE, TYPE, id);
-        GetResponse response = requestBuilder.execute().actionGet();
+        GetResponse response = requestBuilder.get();
         return ResponseBuilder.custom().success().data(response.getSourceAsString()).build();
     }
 
